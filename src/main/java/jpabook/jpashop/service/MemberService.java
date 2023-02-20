@@ -41,4 +41,11 @@ public class MemberService {
     public Member findOne(Long memberId) {
         return memberRepository.findOne(memberId);
     }
+
+    @Transactional
+    public void update(Long id, String name) {
+        Member member = memberRepository.findOne(id);
+        member.setName(name);
+        //member를 반환하는 경우 command + query(조회)가 되기 때문에 지양하였다. (id 정도만 사용)
+    }
 }
