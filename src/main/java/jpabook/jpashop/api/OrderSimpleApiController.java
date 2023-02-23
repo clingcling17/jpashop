@@ -5,6 +5,8 @@ import jpabook.jpashop.domain.Order;
 import jpabook.jpashop.domain.OrderStatus;
 import jpabook.jpashop.repository.OrderRepository;
 import jpabook.jpashop.repository.OrderSearch;
+import jpabook.jpashop.repository.order.simplequery.OrderSimpleQueryDto;
+import jpabook.jpashop.repository.order.simplequery.OrderSimpleQueryRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +27,7 @@ import java.util.stream.Collectors;
 public class OrderSimpleApiController {
 
     private final OrderRepository orderRepository;
+    private final OrderSimpleQueryRepository orderSimpleQueryRepository;
 
     @GetMapping("api/v1/simple-orders")
     public List<Order> ordersV1() {
@@ -60,8 +63,15 @@ public class OrderSimpleApiController {
         return result;
     }
 
+    //화면에는 최적화되어 있지만 V3에 비해 재사용성이 적음 (trade-off)
+    // Repository에 api 로직이 들어감. 계층 분리가 애매함.
+    @GetMapping("/api/v4/simple-orders")
+    public List<OrderSimpleQueryDto> ordersV4() {
+        return orderSimpleQueryRepository.findOrderDtos();
+    }
+
     @Data
-    static class SimpleOrderDto {
+    class SimpleOrderDto {
         private Long orderId;
         private String name;
         private LocalDateTime orderDate;
